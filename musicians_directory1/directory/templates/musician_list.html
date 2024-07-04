@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h1>Musicians</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Musician Name</th>
+            <th>Email</th>
+            <th>Album Rating</th>
+            <th>Instrument Type</th>
+            <th>Album Name</th>
+            <th>Release Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for musician in object_list %}
+            <tr>
+                <td>{{ musician.id }}</td>
+                <td><a href="{% url 'musician-detail' musician.pk %}">{{ musician.first_name }} {{ musician.last_name }}</a></td>
+                <td>{{ musician.email }}</td>
+                <td>
+                    {% for album in musician.album_set.all %}
+                        {{ album.rating }}
+                    {% endfor %}
+                </td>
+                <td>{{ musician.instrument_type }}</td>
+                <td>
+                    {% for album in musician.album_set.all %}
+                        {{ album.album_name }}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for album in musician.album_set.all %}
+                        {{ album.release_date }}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if is_authenticated %}
+                        <a href="{% url 'musician-update' musician.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                        <form action="{% url 'musician-delete' musician.pk %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% if is_authenticated %}
+    <a href="{% url 'musician-create' %}" class="btn btn-success">Add Musician</a>
+    <a href="{% url 'album-create' %}" class="btn btn-success">Add Album</a>
+{% endif %}
+{% endblock %}

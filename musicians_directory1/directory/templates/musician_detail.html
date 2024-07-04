@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h1>{{ object.first_name }} {{ object.last_name }}</h1>
+<p>Email: {{ object.email }}</p>
+<p>Phone: {{ object.phone_number }}</p>
+<p>Instrument: {{ object.instrument_type }}</p>
+
+<h2>Albums</h2>
+<ul>
+    {% for album in object.album_set.all %}
+        <li>{{ album.album_name }} - {{ album.release_date }} - Rating: {{ album.rating }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
